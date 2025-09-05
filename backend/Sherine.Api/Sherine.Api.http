@@ -1,0 +1,6 @@
+@Sherine.Api_HostAddress = http://localhost:5152
+
+GET {{Sherine.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+db:
+image: mysql:8.0
+container_name: sherine_db
+restart: always
+environment:
+MYSQL_ROOT_PASSWORD: root
+MYSQL_DATABASE: sherine
+ports:
+- "3306:3306"
+volumes:
+- db_data:/var/lib/mysql
+- ../sql:/docker-entrypoint-initdb.d
+
+
+api:
+build:
+context: ../../backend/Sherine.Api
+dockerfile: ../../infra/docker/backend.Dockerfile
+environment:
+- ASPNETCORE_URLS=http://+:5000
+- MYSQL_CONN=Server=db;Port=3306;Database=sherine;Uid=root;Pwd=root;
+ports:
+- "5000:5000"
+depends_on:
+- db
+
+
+web:
+build:
+context: ../../frontend/web
+dockerfile: ../../infra/docker/frontend.Dockerfile
+ports:
+- "5173:5173"
+environment:
+- VITE_API_BASE=http://localhost:5000/api
+
+
+volumes:
+db_data:
